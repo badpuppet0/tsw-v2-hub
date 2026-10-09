@@ -3,945 +3,910 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TSW v2 - HTML Proxy & CDN Formatter</title>
-
-  <!-- jsDelivr Hosted Libraries (Font Awesome Icons) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
-
+  <title>Web Proxy Browser</title>
   <style>
-    /* =========================================================
-       1. GLOBAL THEME & BASE STYLES
-       ========================================================= */
-    :root {
-      --bg-color: #070a14;
-      --panel-bg: rgba(16, 23, 42, 0.75);
-      --panel-border: rgba(90, 169, 255, 0.2);
-      --accent-cyan: #35e8ff;
-      --accent-blue: #5aa9ff;
-      --accent-purple: #9b6cff;
-      --accent-green: #00ff88;
-      --text-main: #f4f7ff;
-      --text-muted: #8996b5;
-    }
-
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 10% 10%, rgba(90,169,255,0.08), transparent 30%),
-        radial-gradient(circle at 90% 90%, rgba(155,108,255,0.08), transparent 30%);
-    }
-
-    /* =========================================================
-       2. BLAND WHITE BASIC CALCULATOR LOCK SCREEN
-       ========================================================= */
-    #lock-screen {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background-color: #f0f2f5;
-      padding: 20px;
-    }
-
-    .basic-calc {
-      background-color: #ffffff;
-      border: 1px solid #dcdfe6;
-      border-radius: 12px;
-      padding: 20px;
-      width: 280px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .calc-display-input {
-      width: 100%;
-      height: 50px;
-      background-color: #f8f9fa;
-      border: 1px solid #dcdfe6;
-      border-radius: 6px;
-      font-size: 24px;
-      text-align: right;
-      padding: 0 12px;
-      color: #222222;
-      font-family: monospace;
-      margin-bottom: 16px;
-      outline: none;
-    }
-
-    .calc-keypad {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-
-    .calc-btn-plain {
-      height: 48px;
-      background-color: #ffffff;
-      border: 1px solid #dcdfe6;
-      border-radius: 6px;
-      font-size: 18px;
-      font-weight: 600;
-      color: #333333;
-      cursor: pointer;
-      transition: background-color 0.15s ease;
-    }
-
-    .calc-btn-plain:hover {
-      background-color: #e9ecef;
-    }
-
-    .calc-btn-plain.op {
-      background-color: #f1f3f5;
-      color: #0066cc;
-    }
-
-    .calc-btn-plain.op:hover {
-      background-color: #e2e6ea;
-    }
-
-    .calc-btn-plain.clear-btn {
-      background-color: #fff0f0;
-      color: #d93025;
-      border-color: #fce8e6;
-    }
-
-    .calc-btn-plain.clear-btn:hover {
-      background-color: #fdd8d8;
-    }
-
-    /* =========================================================
-       3. UNLOCKED SITE CONTENT
-       ========================================================= */
-    #site-content {
-      display: none;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 30px 20px;
-    }
-
-    /* Top Nav Header */
-    .nav-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--panel-border);
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .brand-title {
-      font-size: 30px;
-      font-weight: 900;
-      letter-spacing: -0.5px;
-      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .nav-tabs {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .tab-btn {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--panel-border);
-      color: var(--text-muted);
-      font-size: 14px;
-      font-weight: 600;
-      padding: 8px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .tab-btn:hover {
-      color: var(--text-main);
-      border-color: var(--accent-blue);
-      background: rgba(90, 169, 255, 0.1);
-    }
-
-    .tab-btn.active {
-      color: #ffffff;
-      background: var(--accent-blue);
-      border-color: var(--accent-blue);
-      box-shadow: 0 0 15px rgba(90, 169, 255, 0.3);
-    }
-
-    /* Tab Layout Panes */
-    .tab-content {
-      display: none;
-      animation: fadeIn 0.25s ease-in-out;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Home Tab Minimal Hero */
-    .home-hero {
-      text-align: center;
-      padding: 60px 20px;
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: 16px;
-      backdrop-filter: blur(12px);
-    }
-
-    .home-slogan {
-      font-size: clamp(28px, 5vw, 44px);
-      font-weight: 800;
-      margin-bottom: 25px;
-      color: #ffffff;
-    }
-
-    /* Cards Grid */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .card {
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: 12px;
-      padding: 22px;
-      backdrop-filter: blur(10px);
-      transition: all 0.25s ease;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background: #0a0e27;
+      color: #e0e0e0;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      overflow: hidden;
     }
 
-    .card:hover {
-      border-color: var(--accent-cyan);
-      transform: translateY(-4px);
+    /* Header - Title Bar */
+    .header {
+      background: #111827;
+      border-bottom: 1px solid #1f2937;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
     }
 
-    .card-icon {
-      font-size: 28px;
-      color: var(--accent-cyan);
-      margin-bottom: 12px;
-    }
-
-    .card h3 {
-      font-size: 18px;
-      color: #ffffff;
-      margin-bottom: 6px;
-    }
-
-    .card p {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 20px;
-      line-height: 1.4;
-    }
-
-    .card-btn {
-      display: inline-block;
-      text-decoration: none;
-      font-size: 13px;
+    .logo {
       font-weight: 700;
-      color: #ffffff;
-      background: rgba(90, 169, 255, 0.15);
-      border: 1px solid var(--accent-blue);
-      padding: 9px 14px;
+      font-size: 15px;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    .logo span {
+      color: #3b82f6;
+      font-weight: 800;
+    }
+
+    /* Main Container */
+    .main-container {
+      display: flex;
+      flex: 1;
+      gap: 12px;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    /* Left Panel - Browser */
+    .browser-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #111827;
       border-radius: 8px;
-      text-align: center;
+      border: 1px solid #1f2937;
+      overflow: hidden;
+    }
+
+    /* Chrome-like Address Bar */
+    .chrome-bar {
+      background: #1f2937;
+      padding: 12px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      border-bottom: 1px solid #0f1419;
+    }
+
+    .chrome-button {
+      width: 32px;
+      height: 32px;
+      background: #374151;
+      border: 1px solid #4b5563;
+      border-radius: 6px;
+      color: #d1d5db;
       cursor: pointer;
-      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.2s;
     }
 
-    .card-btn:hover {
-      background: var(--accent-blue);
-      box-shadow: 0 0 12px rgba(90, 169, 255, 0.4);
+    .chrome-button:hover {
+      background: #4b5563;
+      color: #fff;
     }
 
-    /* Proxy Tool Styles */
-    .proxy-container {
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: 16px;
-      padding: 24px;
-      margin-top: 20px;
+    .chrome-button:active {
+      background: #2d3748;
     }
 
-    .proxy-section {
-      margin-bottom: 24px;
+    .chrome-button.back:disabled,
+    .chrome-button.forward:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
-    .proxy-section h3 {
-      color: var(--accent-cyan);
-      font-size: 16px;
-      margin-bottom: 12px;
+    .address-bar-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: #111827;
+      border: 1px solid #374151;
+      border-radius: 6px;
+      padding: 0 12px;
+      height: 36px;
+      transition: all 0.2s;
+    }
+
+    .address-bar-container:focus-within {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .address-bar-container input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #e0e0e0;
+      font-size: 13px;
+      outline: none;
+      font-family: 'Monaco', 'Courier New', monospace;
+    }
+
+    .address-bar-container input::placeholder {
+      color: #6b7280;
+    }
+
+    .lock-icon {
+      color: #10b981;
+      font-size: 12px;
+      margin-right: 6px;
+    }
+
+    .go-button {
+      background: #3b82f6;
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s;
+      margin-left: 8px;
+    }
+
+    .go-button:hover {
+      background: #2563eb;
+    }
+
+    .go-button:active {
+      background: #1d4ed8;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0;
+      background: #1f2937;
+      border-bottom: 1px solid #111827;
+      padding: 0;
+      min-height: 40px;
+    }
+
+    .tab {
       display: flex;
       align-items: center;
       gap: 8px;
-    }
-
-    .input-group {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
-
-    .input-group input {
-      flex: 1;
-      min-width: 250px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--panel-border);
-      color: var(--text-main);
-      padding: 12px 14px;
-      border-radius: 8px;
-      font-family: 'Monaco', 'Courier New', monospace;
-      font-size: 13px;
-    }
-
-    .input-group input::placeholder {
-      color: var(--text-muted);
-    }
-
-    .input-group button {
-      background: var(--accent-blue);
-      border: none;
-      color: #ffffff;
-      padding: 12px 20px;
-      border-radius: 8px;
+      padding: 0 14px;
+      background: #111827;
+      border: 1px solid #374151;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      color: #9ca3af;
       cursor: pointer;
-      font-weight: 700;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .input-group button:hover {
-      background: var(--accent-cyan);
-      box-shadow: 0 0 12px rgba(90, 169, 255, 0.4);
-    }
-
-    .output-box {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(90, 169, 255, 0.3);
-      border-radius: 8px;
-      padding: 14px;
-      margin-top: 10px;
-      position: relative;
-      word-break: break-all;
-      font-family: 'Monaco', 'Courier New', monospace;
       font-size: 12px;
-      color: var(--accent-green);
-      min-height: 40px;
-      max-height: 200px;
-      overflow-y: auto;
+      margin-right: 2px;
+      margin-top: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+      max-width: 200px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .tab:hover {
+      background: #1f2937;
+      color: #e0e0e0;
+    }
+
+    .tab.active {
+      background: #1f2937;
+      color: #fff;
+      border-bottom: 2px solid #3b82f6;
+      border-bottom-width: 2px;
+      padding-bottom: calc(1px - 2px);
+    }
+
+    .tab-close {
+      opacity: 0;
+      cursor: pointer;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .tab:hover .tab-close {
+      opacity: 1;
+    }
+
+    .tab-close:hover {
+      color: #ef4444;
+    }
+
+    /* Viewer Area */
+    .viewer {
+      flex: 1;
+      background: #0f1419;
+      border-bottom: 1px solid #1f2937;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .loading-state {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      flex-direction: column;
+      gap: 16px;
+      color: #6b7280;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 2px solid #374151;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-message {
+      background: #7f1d1d;
+      border: 1px solid #991b1b;
+      color: #fca5a5;
+      padding: 16px;
+      border-radius: 6px;
+      margin: 16px;
+      font-size: 13px;
       line-height: 1.6;
     }
 
-    .copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: var(--accent-purple);
+    .iframe-container {
+      flex: 1;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .iframe-container iframe {
+      width: 100%;
+      height: 100%;
       border: none;
-      color: #ffffff;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
+    }
+
+    /* Right Panel - HTML Converter */
+    .converter-panel {
+      width: 360px;
+      display: flex;
+      flex-direction: column;
+      background: #111827;
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      overflow: hidden;
+    }
+
+    .converter-header {
+      background: #1f2937;
+      padding: 14px;
+      border-bottom: 1px solid #0f1419;
+      font-weight: 600;
+      font-size: 13px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .converter-header span {
+      color: #3b82f6;
+      font-weight: 700;
+    }
+
+    .converter-content {
+      flex: 1;
+      padding: 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .converter-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .converter-label {
       font-size: 11px;
       font-weight: 700;
-      transition: all 0.2s ease;
+      color: #3b82f6;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .converter-input {
+      background: #0f1419;
+      border: 1px solid #374151;
+      color: #e0e0e0;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      transition: all 0.2s;
+    }
+
+    .converter-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .converter-input::placeholder {
+      color: #6b7280;
+    }
+
+    .converter-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 0 0 8px 0;
+      border-bottom: 1px solid #374151;
+    }
+
+    .converter-tab-btn {
+      flex: 1;
+      background: #0f1419;
+      border: 1px solid #374151;
+      color: #9ca3af;
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .converter-tab-btn:hover {
+      background: #1f2937;
+      color: #e0e0e0;
+    }
+
+    .converter-tab-btn.active {
+      background: #3b82f6;
+      border-color: #3b82f6;
+      color: #fff;
+    }
+
+    .converter-output {
+      background: #0f1419;
+      border: 1px solid #374151;
+      color: #10b981;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      min-height: 60px;
+      word-break: break-all;
+      word-wrap: break-word;
+      overflow-y: auto;
+      max-height: 120px;
+    }
+
+    .converter-button {
+      background: #3b82f6;
+      border: none;
+      color: white;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .converter-button:hover {
+      background: #2563eb;
+    }
+
+    .converter-button:active {
+      background: #1d4ed8;
+    }
+
+    .copy-btn {
+      background: #10b981;
+      font-size: 11px;
+      padding: 8px 12px;
+      margin-top: 8px;
     }
 
     .copy-btn:hover {
-      background: var(--accent-cyan);
+      background: #059669;
     }
 
     .copy-btn.copied {
-      background: var(--accent-green);
+      background: #6b7280;
     }
 
-    /* Footer Bar */
-    .footer-bar {
-      margin-top: 60px;
-      padding-top: 20px;
-      border-top: 1px solid var(--panel-border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
+    /* Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
     }
 
-    .footer-links {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .footer-btn {
+    ::-webkit-scrollbar-track {
       background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-muted);
-      font-size: 12px;
-      padding: 6px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.15s ease;
     }
 
-    .footer-btn:hover {
-      color: #ffffff;
-      border-color: var(--accent-purple);
-      background: rgba(155, 108, 255, 0.1);
+    ::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 4px;
     }
 
-    /* Modals */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(7, 10, 20, 0.85);
-      backdrop-filter: blur(8px);
-      z-index: 1000;
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4b5563;
+    }
+
+    /* Placeholder states */
+    .placeholder-state {
+      display: flex;
+      align-items: center;
       justify-content: center;
-      align-items: center;
-      padding: 20px;
+      height: 100%;
+      text-align: center;
+      color: #6b7280;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    .modal-box {
-      background: #0f172a;
-      border: 1px solid var(--panel-border);
-      border-radius: 12px;
-      width: 100%;
-      max-width: 420px;
-      padding: 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      max-height: 80vh;
-      overflow-y: auto;
+    .placeholder-icon {
+      font-size: 48px;
+      opacity: 0.3;
     }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      border-bottom: 1px solid var(--panel-border);
-      padding-bottom: 10px;
+    .placeholder-text {
+      font-size: 13px;
+      line-height: 1.6;
     }
 
-    .modal-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--accent-cyan);
-    }
-
-    .close-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    .close-btn:hover { color: #ffffff; }
-
-    .credits-group {
-      margin-bottom: 12px;
-    }
-
-    .credits-label {
-      font-size: 12px;
-      color: var(--accent-purple);
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-
-    .credits-value {
-      font-size: 14px;
-      color: var(--text-main);
-    }
-
+    /* Help text */
     .help-text {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 8px;
+      font-size: 11px;
+      color: #6b7280;
       line-height: 1.5;
+      margin-bottom: 8px;
     }
 
-    .format-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
-    .format-tab {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--panel-border);
-      color: var(--text-muted);
-      font-size: 12px;
-      padding: 6px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .format-tab:hover {
-      background: rgba(90, 169, 255, 0.1);
-      border-color: var(--accent-blue);
-    }
-
-    .format-tab.active {
-      background: var(--accent-blue);
-      color: #ffffff;
-      border-color: var(--accent-blue);
+    .fade-in {
+      animation: fadeIn 0.2s ease-in;
     }
   </style>
 </head>
 <body>
 
-  <!-- =========================================================
-       1. BASIC WHITE CALCULATOR LOCK SCREEN
-       ========================================================= -->
-  <div id="lock-screen">
-    <div class="basic-calc">
-      <input type="text" id="calc-display" class="calc-display-input" readonly value="0">
-      <div class="calc-keypad">
-        <button class="calc-btn-plain clear-btn" onclick="clearDisplay()">C</button>
-        <button class="calc-btn-plain op" onclick="appendValue('/')">/</button>
-        <button class="calc-btn-plain op" onclick="appendValue('*')">*</button>
-        <button class="calc-btn-plain op" onclick="appendValue('-')">-</button>
-        
-        <button class="calc-btn-plain" onclick="appendValue('7')">7</button>
-        <button class="calc-btn-plain" onclick="appendValue('8')">8</button>
-        <button class="calc-btn-plain" onclick="appendValue('9')">9</button>
-        <button class="calc-btn-plain op" onclick="appendValue('+')">+</button>
-        
-        <button class="calc-btn-plain" onclick="appendValue('4')">4</button>
-        <button class="calc-btn-plain" onclick="appendValue('5')">5</button>
-        <button class="calc-btn-plain" onclick="appendValue('6')">6</button>
-        <button class="calc-btn-plain op" onclick="calculate()">=</button>
-        
-        <button class="calc-btn-plain" onclick="appendValue('1')">1</button>
-        <button class="calc-btn-plain" onclick="appendValue('2')">2</button>
-        <button class="calc-btn-plain" onclick="appendValue('3')">3</button>
-        <button class="calc-btn-plain" onclick="appendValue('0')">0</button>
-      </div>
-    </div>
-  </div>
+<div class="header">
+  <div class="logo">Web <span>Proxy</span></div>
+</div>
 
-  <!-- =========================================================
-       2. UNLOCKED TSW v2 SITE
-       ========================================================= -->
-  <div id="site-content">
+<div class="main-container">
+  
+  <!-- Browser Panel -->
+  <div class="browser-panel">
     
-    <!-- Navigation Header -->
-    <header class="nav-header">
-      <div class="brand-title" id="ui-brand-title">TSW v2</div>
-      <nav class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('home')"><i class="fa-solid fa-house"></i> Home</button>
-        <button class="tab-btn" onclick="switchTab('proxy')"><i class="fa-solid fa-globe"></i> HTML Proxy</button>
-        <button class="tab-btn" onclick="switchTab('cdn')"><i class="fa-solid fa-network-wired"></i> CDN Formatter</button>
-      </nav>
-    </header>
-
-    <!-- Tab 1: HOME -->
-    <main id="tab-home" class="tab-content active">
-      <div class="home-hero">
-        <h1 class="home-slogan" id="ui-slogan">Unrestricted access to what matters.</h1>
-        <p style="color: var(--text-muted); font-size: 14px; margin-top: 15px;">
-          Web utilities including HTML proxy capabilities and jsDelivr CDN formatter.
-        </p>
+    <!-- Chrome Bar -->
+    <div class="chrome-bar">
+      <button class="chrome-button back" id="backBtn" onclick="goBack()" title="Back">‹</button>
+      <button class="chrome-button forward" id="forwardBtn" onclick="goForward()" title="Forward">›</button>
+      <button class="chrome-button" id="refreshBtn" onclick="refresh()" title="Refresh">⟳</button>
+      
+      <div class="address-bar-container">
+        <span class="lock-icon">🔒</span>
+        <input 
+          type="text" 
+          id="addressInput" 
+          placeholder="Enter URL to proxy..."
+          onkeypress="if(event.key === 'Enter') navigate()"
+        />
       </div>
+      
+      <button class="go-button" id="goBtn" onclick="navigate()">Go</button>
+    </div>
 
-      <div class="cards-grid" style="margin-top: 40px;">
-        <div class="card">
-          <div>
-            <div class="card-icon"><i class="fa-solid fa-globe"></i></div>
-            <h3>HTML Proxy</h3>
-            <p>Access and proxy HTML content from any URL.</p>
-          </div>
-          <button class="card-btn" onclick="switchTab('proxy')">Open Proxy →</button>
-        </div>
-        <div class="card">
-          <div>
-            <div class="card-icon"><i class="fa-solid fa-link"></i></div>
-            <h3>CDN Formatter</h3>
-            <p>Convert URLs to jsDelivr CDN format instantly.</p>
-          </div>
-          <button class="card-btn" onclick="switchTab('cdn')">Open Formatter →</button>
-        </div>
-      </div>
-    </main>
-
-    <!-- Tab 2: HTML PROXY -->
-    <section id="tab-proxy" class="tab-content">
-      <div class="proxy-container">
-        <h2 style="color: var(--accent-cyan); margin-bottom: 20px;">
-          <i class="fa-solid fa-globe"></i> HTML Proxy Tool
-        </h2>
-        
-        <div class="proxy-section">
-          <h3><i class="fa-solid fa-code"></i> Fetch HTML Content</h3>
-          <div class="input-group">
-            <input type="text" id="proxy-url" placeholder="Enter URL (e.g., https://example.com)" />
-            <button onclick="fetchHTMLProxy()">Fetch HTML</button>
-          </div>
-          <div class="help-text">
-            Enter any URL to retrieve and display its HTML content. Useful for viewing page structure and debugging.
-          </div>
-          <div id="proxy-output" class="output-box" style="display: none;">
-            <button class="copy-btn" onclick="copyToClipboard('proxy-output')">Copy</button>
-            <div id="proxy-output-content"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Tab 3: CDN FORMATTER -->
-    <section id="tab-cdn" class="tab-content">
-      <div class="proxy-container">
-        <h2 style="color: var(--accent-cyan); margin-bottom: 20px;">
-          <i class="fa-solid fa-network-wired"></i> jsDelivr CDN Formatter
-        </h2>
-        
-        <div class="proxy-section">
-          <h3><i class="fa-solid fa-project-diagram"></i> Convert to CDN URL</h3>
-          
-          <div class="format-tabs">
-            <button class="format-tab active" onclick="setFormatMode('npm')">NPM</button>
-            <button class="format-tab" onclick="setFormatMode('github')">GitHub</button>
-            <button class="format-tab" onclick="setFormatMode('wordpress')">WordPress</button>
-            <button class="format-tab" onclick="setFormatMode('custom')">Custom</button>
-          </div>
-
-          <div id="npm-mode" class="format-mode">
-            <div class="input-group">
-              <input type="text" id="npm-package" placeholder="e.g., jquery" />
-              <input type="text" id="npm-version" placeholder="@3.6.0 or @latest" />
-              <input type="text" id="npm-file" placeholder="dist/jquery.min.js" />
-              <button onclick="formatNPM()">Format</button>
-            </div>
-            <div class="help-text">
-              Format: https://cdn.jsdelivr.net/npm/[package]@[version]/[file]
-            </div>
-          </div>
-
-          <div id="github-mode" class="format-mode" style="display: none;">
-            <div class="input-group">
-              <input type="text" id="github-user" placeholder="GitHub username" />
-              <input type="text" id="github-repo" placeholder="Repository name" />
-              <input type="text" id="github-version" placeholder="@latest or commit SHA" />
-              <button onclick="formatGitHub()">Format</button>
-            </div>
-            <div class="input-group">
-              <input type="text" id="github-file" placeholder="Path to file (e.g., dist/file.js)" style="flex: 1;" />
-            </div>
-            <div class="help-text">
-              Format: https://cdn.jsdelivr.net/gh/[user]/[repo]@[version]/[file]
-            </div>
-          </div>
-
-          <div id="wordpress-mode" class="format-mode" style="display: none;">
-            <div class="input-group">
-              <input type="text" id="wp-plugin" placeholder="Plugin slug" />
-              <input type="text" id="wp-version" placeholder="@latest or version" />
-              <input type="text" id="wp-file" placeholder="js/file.js" />
-              <button onclick="formatWordPress()">Format</button>
-            </div>
-            <div class="help-text">
-              Format: https://cdn.jsdelivr.net/wp/plugins/[plugin]@[version]/[file]
-            </div>
-          </div>
-
-          <div id="custom-mode" class="format-mode" style="display: none;">
-            <div class="input-group">
-              <input type="text" id="custom-url" placeholder="https://example.com/path/to/file.js" />
-              <button onclick="validateCDNFormat()">Validate & Format</button>
-            </div>
-            <div class="help-text">
-              Paste any URL and we'll suggest the best CDN format for it.
-            </div>
-          </div>
-
-          <div id="cdn-output" class="output-box" style="display: none; margin-top: 16px;">
-            <button class="copy-btn" onclick="copyToClipboard('cdn-output-content')">Copy</button>
-            <div id="cdn-output-content"></div>
-          </div>
-        </div>
-
-        <div class="proxy-section" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--panel-border);">
-          <h3><i class="fa-solid fa-list"></i> Quick Reference</h3>
-          <div class="help-text" style="margin-top: 0;">
-            <strong>jsDelivr CDN Formats:</strong><br><br>
-            <strong>NPM Packages:</strong> cdn.jsdelivr.net/npm/package@version/file<br>
-            <strong>GitHub Repos:</strong> cdn.jsdelivr.net/gh/user/repo@version/file<br>
-            <strong>WordPress Plugins:</strong> cdn.jsdelivr.net/wp/plugins/slug@version/file<br>
-            <strong>General Combine:</strong> cdn.jsdelivr.net/combine/url1,url2,url3<br><br>
-            jsDelivr supports performance optimization like minification, version optimization, and more!
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer Bar -->
-    <footer class="footer-bar">
-      <div style="font-size:12px; color:var(--text-muted);">TSW v2 - HTML Proxy & CDN Formatter</div>
-      <div class="footer-links">
-        <a href="https://www.jsdelivr.com/" class="footer-btn" target="_blank"><i class="fa-solid fa-external-link"></i> jsDelivr Docs</a>
-        <button class="footer-btn" onclick="openModal('info-modal')"><i class="fa-solid fa-circle-info"></i> Info</button>
-      </div>
-    </footer>
-
-  </div>
-
-  <!-- =========================================================
-       3. MODALS
-       ========================================================= -->
-  <div id="info-modal" class="modal-overlay">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-title">ABOUT THIS TOOL</div>
-        <button class="close-btn" onclick="closeModal('info-modal')">✕</button>
-      </div>
-      <div class="credits-group">
-        <div class="credits-label">PURPOSE</div>
-        <div class="credits-value">HTML Proxy and jsDelivr CDN URL formatter for web developers and content creators.</div>
-      </div>
-      <div class="credits-group" style="margin-top: 16px;">
-        <div class="credits-label">FEATURES</div>
-        <div class="credits-value">
-          • Fetch and display HTML content<br>
-          • Format URLs for jsDelivr CDN<br>
-          • Support for NPM, GitHub, WordPress plugins<br>
-          • One-click copy functionality<br>
-          • Easy-to-use interface
-        </div>
-      </div>
-      <div class="credits-group" style="margin-top: 16px;">
-        <div class="credits-label">jsDelivr</div>
-        <div class="credits-value">A free, fast, and reliable CDN for open-source projects. Learn more at <a href="https://www.jsdelivr.com" target="_blank" style="color: var(--accent-blue);">jsdelivr.com</a></div>
+    <!-- Tabs -->
+    <div class="tabs" id="tabsContainer">
+      <div class="tab active" data-tab-id="0" onclick="switchTab(0)">
+        <span>🏠 Home</span>
+        <span class="tab-close" onclick="closeTab(event, 0)">×</span>
       </div>
     </div>
+
+    <!-- Viewer -->
+    <div class="viewer">
+      <div id="tab-0" class="tab-content active">
+        <div class="placeholder-state">
+          <div class="placeholder-icon">🌐</div>
+          <div class="placeholder-text">
+            <div style="font-weight: 600; margin-bottom: 4px;">Ready to browse</div>
+            <div>Enter a URL above to get started</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- =========================================================
-       4. CONFIG & JAVASCRIPT LOGIC
-       ========================================================= -->
-  <script>
-    /* EASY CONFIGURATION SECTION */
-    const CONFIG = {
-      PASSCODE: "1234",
-      TITLE: "TSW v2",
-      SLOGAN: "Unrestricted access to what matters."
-    };
+  <!-- HTML Converter Panel -->
+  <div class="converter-panel">
+    
+    <div class="converter-header">
+      HTML <span>Converter</span>
+    </div>
 
-    /* CALCULATOR PASSCODE LOCK LOGIC */
-    let calcInput = "";
-
-    function appendValue(val) {
-      if (calcInput === "0") calcInput = "";
-      calcInput += val;
-      document.getElementById("calc-display").value = calcInput;
-    }
-
-    function clearDisplay() {
-      calcInput = "";
-      document.getElementById("calc-display").value = "0";
-    }
-
-    function calculate() {
-      if (calcInput === CONFIG.PASSCODE) {
-        unlockSite();
-        return;
-      }
-      try {
-        calcInput = eval(calcInput).toString();
-        document.getElementById("calc-display").value = calcInput;
-      } catch (e) {
-        document.getElementById("calc-display").value = "Error";
-        calcInput = "";
-      }
-    }
-
-    function unlockSite() {
-      document.getElementById("lock-screen").style.display = "none";
-      document.getElementById("site-content").style.display = "block";
-    }
-
-    /* NAVIGATION LOGIC */
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-
-      document.getElementById('tab-' + tabId).classList.add('active');
+    <div class="converter-content">
       
-      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(
-        btn => btn.innerText.toLowerCase().includes(tabId)
-      );
-      if (activeBtn) activeBtn.classList.add('active');
-    }
+      <!-- Tab Selector -->
+      <div>
+        <div style="font-size: 11px; color: #6b7280; margin-bottom: 8px; font-weight: 600;">CONVERSION MODE</div>
+        <div class="converter-tabs">
+          <button class="converter-tab-btn active" onclick="switchConverterTab('html-to-cdn')">HTML → CDN</button>
+          <button class="converter-tab-btn" onclick="switchConverterTab('url-to-cdn')">URL → CDN</button>
+        </div>
+      </div>
 
-    function openModal(id) { document.getElementById(id).style.display = "flex"; }
-    function closeModal(id) { document.getElementById(id).style.display = "none"; }
-
-    /* HTML PROXY LOGIC */
-    function fetchHTMLProxy() {
-      const url = document.getElementById('proxy-url').value.trim();
-      if (!url) {
-        alert('Please enter a URL');
-        return;
-      }
-
-      const outputDiv = document.getElementById('proxy-output');
-      const contentDiv = document.getElementById('proxy-output-content');
-      
-      contentDiv.innerHTML = '<span style="color: var(--accent-blue);">Fetching...</span>';
-      outputDiv.style.display = 'block';
-
-      fetch(url)
-        .then(response => response.text())
-        .then(html => {
-          const escaped = html
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .substring(0, 3000);
-          contentDiv.innerHTML = escaped + (html.length > 3000 ? '<br><br><em style="color: var(--text-muted);">[Content truncated - showing first 3000 characters]</em>' : '');
-        })
-        .catch(error => {
-          contentDiv.innerHTML = '<span style="color: #ff6b6b;">Error: ' + error.message + '</span><br><em style="color: var(--text-muted); margin-top: 10px; display: block;">Note: CORS restrictions may apply. Consider using a proxy service.</em>';
-        });
-    }
-
-    /* CDN FORMATTER LOGIC */
-    let currentFormatMode = 'npm';
-
-    function setFormatMode(mode) {
-      currentFormatMode = mode;
-      document.querySelectorAll('.format-mode').forEach(el => el.style.display = 'none');
-      document.getElementById(mode + '-mode').style.display = 'block';
-      document.querySelectorAll('.format-tab').forEach(el => el.classList.remove('active'));
-      event.target.classList.add('active');
-    }
-
-    function formatNPM() {
-      const pkg = document.getElementById('npm-package').value.trim();
-      const version = document.getElementById('npm-version').value.trim();
-      const file = document.getElementById('npm-file').value.trim();
-
-      if (!pkg || !version || !file) {
-        alert('Please fill all fields');
-        return;
-      }
-
-      const cdnUrl = `https://cdn.jsdelivr.net/npm/${pkg}${version}/${file}`;
-      displayCDNOutput(cdnUrl);
-    }
-
-    function formatGitHub() {
-      const user = document.getElementById('github-user').value.trim();
-      const repo = document.getElementById('github-repo').value.trim();
-      const version = document.getElementById('github-version').value.trim();
-      const file = document.getElementById('github-file').value.trim();
-
-      if (!user || !repo || !version || !file) {
-        alert('Please fill all fields');
-        return;
-      }
-
-      const cdnUrl = `https://cdn.jsdelivr.net/gh/${user}/${repo}${version}/${file}`;
-      displayCDNOutput(cdnUrl);
-    }
-
-    function formatWordPress() {
-      const plugin = document.getElementById('wp-plugin').value.trim();
-      const version = document.getElementById('wp-version').value.trim();
-      const file = document.getElementById('wp-file').value.trim();
-
-      if (!plugin || !version || !file) {
-        alert('Please fill all fields');
-        return;
-      }
-
-      const cdnUrl = `https://cdn.jsdelivr.net/wp/plugins/${plugin}${version}/${file}`;
-      displayCDNOutput(cdnUrl);
-    }
-
-    function validateCDNFormat() {
-      const url = document.getElementById('custom-url').value.trim();
-      if (!url) {
-        alert('Please enter a URL');
-        return;
-      }
-
-      // Try to detect URL type and suggest format
-      let suggestion = url;
-      if (url.includes('github.com')) {
-        const match = url.match(/github\.com\/([^\/]+)\/([^\/]+).*?\/([^?]+)/);
-        if (match) {
-          suggestion = `https://cdn.jsdelivr.net/gh/${match[1]}/${match[2]}@latest/${match[3]}`;
-        }
-      } else if (url.includes('npmjs.com') || url.includes('npm')) {
-        suggestion = `https://cdn.jsdelivr.net/npm/${url.split('/').pop()}@latest`;
-      }
-
-      displayCDNOutput(suggestion);
-    }
-
-    function displayCDNOutput(cdnUrl) {
-      const outputDiv = document.getElementById('cdn-output');
-      const contentDiv = document.getElementById('cdn-output-content');
-      
-      contentDiv.textContent = cdnUrl;
-      outputDiv.style.display = 'block';
-    }
-
-    function copyToClipboard(elementId) {
-      const element = document.getElementById(elementId);
-      const text = element.textContent;
-      
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = event.target;
-        btn.textContent = '✓ Copied!';
-        btn.classList.add('copied');
+      <!-- HTML to CDN Converter -->
+      <div id="html-to-cdn-tab" class="converter-section">
+        <div class="converter-label">Paste HTML Code</div>
+        <textarea 
+          id="htmlInput" 
+          class="converter-input" 
+          placeholder="&lt;script src=&quot;...&quot;&gt;&lt;/script&gt;"
+          style="resize: none; height: 80px; font-family: 'Monaco', 'Courier New', monospace; font-size: 11px;"
+        ></textarea>
         
-        setTimeout(() => {
-          btn.textContent = 'Copy';
-          btn.classList.remove('copied');
-        }, 2000);
-      });
+        <button class="converter-button" onclick="convertHtmlToCdn()">Extract CDN URLs</button>
+        
+        <div class="converter-label" style="margin-top: 12px;">Detected URLs</div>
+        <div class="converter-output" id="htmlOutput">No URLs extracted</div>
+        
+        <button class="converter-button copy-btn" onclick="copyOutput('htmlOutput')">📋 Copy URLs</button>
+      </div>
+
+      <!-- URL to CDN Converter -->
+      <div id="url-to-cdn-tab" class="converter-section" style="display: none;">
+        <div class="converter-label">jsDelivr CDN Format</div>
+        <div class="help-text">Convert URLs to jsDelivr CDN for better performance</div>
+        
+        <div class="converter-section">
+          <div class="converter-label">Source Type</div>
+          <select id="cdnType" class="converter-input" style="cursor: pointer; padding: 8px 10px;">
+            <option value="npm">NPM Package</option>
+            <option value="github">GitHub Repository</option>
+            <option value="wordpress">WordPress Plugin</option>
+          </select>
+        </div>
+
+        <div id="npm-fields">
+          <div class="converter-section">
+            <div class="converter-label">Package Name</div>
+            <input type="text" id="npmPackage" class="converter-input" placeholder="e.g., jquery">
+          </div>
+          <div class="converter-section">
+            <div class="converter-label">Version</div>
+            <input type="text" id="npmVersion" class="converter-input" placeholder="@latest or @3.6.0">
+          </div>
+          <div class="converter-section">
+            <div class="converter-label">File Path</div>
+            <input type="text" id="npmFile" class="converter-input" placeholder="dist/jquery.min.js">
+          </div>
+        </div>
+
+        <div id="github-fields" style="display: none;">
+          <div class="converter-section">
+            <div class="converter-label">User/Org</div>
+            <input type="text" id="githubUser" class="converter-input" placeholder="torvalds">
+          </div>
+          <div class="converter-section">
+            <div class="converter-label">Repository</div>
+            <input type="text" id="githubRepo" class="converter-input" placeholder="linux">
+          </div>
+          <div class="converter-section">
+            <div class="converter-label">Version</div>
+            <input type="text" id="githubVersion" class="converter-input" placeholder="@latest">
+          </div>
+          <div class="converter-section">
+            <div class="converter-label">File Path</div>
+            <input type="text" id="githubFile" class="converter-input" placeholder="README.md">
+          </div>
+        </div>
+
+        <div id="wordpress-fields" style="display: none;">
+          <div class="converter-section">
+            <div class="converter-label">Plugin Slug</div>
+            <input type="text" id="wpPlugin" class="converter-input" placeholder="elementor">
+          </div>
+          <div class="converter-section">
+            <div class="converter-label">Version</div>
+            <input type="text" id="wpVersion" class="converter-input" placeholder="@latest">
+          </div>
+          <div class="converter-section">
+            <div class="converter-label">File Path</div>
+            <input type="text" id="wpFile" class="converter-input" placeholder="assets/js/frontend.min.js">
+          </div>
+        </div>
+
+        <button class="converter-button" onclick="convertToCdn()">Generate CDN URL</button>
+        
+        <div class="converter-label" style="margin-top: 12px;">Result</div>
+        <div class="converter-output" id="cdnOutput">CDN URL will appear here</div>
+        
+        <button class="converter-button copy-btn" onclick="copyOutput('cdnOutput')">📋 Copy URL</button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  const PROXY_API = 'https://corsproxy.io/?';
+  let browserHistory = [];
+  let currentHistoryIndex = -1;
+  let tabCounter = 0;
+  let currentTabId = 0;
+
+  // Initialize
+  window.addEventListener('load', () => {
+    updateNavigationButtons();
+  });
+
+  // CDN Type Selector
+  document.getElementById('cdnType').addEventListener('change', (e) => {
+    document.getElementById('npm-fields').style.display = e.target.value === 'npm' ? 'block' : 'none';
+    document.getElementById('github-fields').style.display = e.target.value === 'github' ? 'block' : 'none';
+    document.getElementById('wordpress-fields').style.display = e.target.value === 'wordpress' ? 'block' : 'none';
+  });
+
+  // Navigation
+  function navigate() {
+    let url = document.getElementById('addressInput').value.trim();
+    
+    if (!url) return;
+    
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url;
     }
 
-    /* INITIALIZE CONFIG ON LOAD */
-    window.onload = function() {
-      document.getElementById("ui-brand-title").innerText = CONFIG.TITLE;
-      document.getElementById("ui-slogan").innerText = CONFIG.SLOGAN;
-    };
-  </script>
+    const tabId = currentTabId;
+    const tabContent = document.getElementById(`tab-${tabId}`);
+    
+    if (!tabContent) return;
+
+    tabContent.innerHTML = `
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <div>Loading...</div>
+      </div>
+    `;
+
+    // Add to history
+    if (currentHistoryIndex < browserHistory.length - 1) {
+      browserHistory = browserHistory.slice(0, currentHistoryIndex + 1);
+    }
+    browserHistory.push(url);
+    currentHistoryIndex = browserHistory.length - 1;
+    updateNavigationButtons();
+
+    // Fetch with proxy
+    const proxyUrl = PROXY_API + encodeURIComponent(url);
+    
+    fetch(proxyUrl)
+      .then(response => response.text())
+      .then(html => {
+        // Create iframe to display content
+        const iframe = document.createElement('iframe');
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        
+        tabContent.innerHTML = '';
+        tabContent.appendChild(iframe);
+        
+        // Write content to iframe
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        iframeDoc.open();
+        iframeDoc.write(html);
+        iframeDoc.close();
+        
+        // Update tab title
+        const title = iframeDoc.title || 'New Tab';
+        updateTabTitle(tabId, title);
+        document.getElementById('addressInput').value = url;
+      })
+      .catch(error => {
+        tabContent.innerHTML = `
+          <div class="error-message">
+            <strong>Failed to load:</strong> ${error.message}<br><br>
+            This may be due to CORS restrictions or network issues. Try a different URL or check if the server is accessible.
+          </div>
+        `;
+      });
+  }
+
+  function goBack() {
+    if (currentHistoryIndex > 0) {
+      currentHistoryIndex--;
+      loadFromHistory();
+      updateNavigationButtons();
+    }
+  }
+
+  function goForward() {
+    if (currentHistoryIndex < browserHistory.length - 1) {
+      currentHistoryIndex++;
+      loadFromHistory();
+      updateNavigationButtons();
+    }
+  }
+
+  function loadFromHistory() {
+    if (browserHistory[currentHistoryIndex]) {
+      document.getElementById('addressInput').value = browserHistory[currentHistoryIndex];
+      navigate();
+    }
+  }
+
+  function refresh() {
+    if (browserHistory[currentHistoryIndex]) {
+      navigate();
+    }
+  }
+
+  function updateNavigationButtons() {
+    document.getElementById('backBtn').disabled = currentHistoryIndex <= 0;
+    document.getElementById('forwardBtn').disabled = currentHistoryIndex >= browserHistory.length - 1;
+  }
+
+  // Tab Management
+  function switchTab(tabId) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+    
+    // Show selected tab
+    const tabContent = document.getElementById(`tab-${tabId}`);
+    if (tabContent) {
+      tabContent.style.display = 'flex';
+      tabContent.classList.add('fade-in');
+    }
+    
+    document.querySelector(`[data-tab-id="${tabId}"]`).classList.add('active');
+    currentTabId = tabId;
+  }
+
+  function closeTab(event, tabId) {
+    event.stopPropagation();
+    const tabElement = document.querySelector(`[data-tab-id="${tabId}"]`);
+    const tabContent = document.getElementById(`tab-${tabId}`);
+    
+    if (tabElement) tabElement.remove();
+    if (tabContent) tabContent.remove();
+    
+    if (currentTabId === tabId) {
+      const remaining = document.querySelector('.tab');
+      if (remaining) {
+        const nextTabId = parseInt(remaining.getAttribute('data-tab-id'));
+        switchTab(nextTabId);
+      }
+    }
+  }
+
+  function updateTabTitle(tabId, title) {
+    const tab = document.querySelector(`[data-tab-id="${tabId}"]`);
+    if (tab) {
+      const domain = new URL(browserHistory[currentHistoryIndex]).hostname;
+      tab.innerHTML = `<span>${domain || 'Tab'}</span><span class="tab-close" onclick="closeTab(event, ${tabId})">×</span>`;
+    }
+  }
+
+  // HTML Converter
+  function convertHtmlToCdn() {
+    const html = document.getElementById('htmlInput').value;
+    const urlRegex = /https?:\/\/[^\s"'><]+/g;
+    const urls = html.match(urlRegex) || [];
+    
+    const uniqueUrls = [...new Set(urls)];
+    
+    if (uniqueUrls.length === 0) {
+      document.getElementById('htmlOutput').textContent = 'No URLs found in HTML';
+      return;
+    }
+    
+    document.getElementById('htmlOutput').textContent = uniqueUrls.join('\n');
+  }
+
+  // CDN Converter
+  function convertToCdn() {
+    const type = document.getElementById('cdnType').value;
+    let cdnUrl = '';
+
+    if (type === 'npm') {
+      const pkg = document.getElementById('npmPackage').value;
+      const version = document.getElementById('npmVersion').value;
+      const file = document.getElementById('npmFile').value;
+      
+      if (!pkg || !version || !file) {
+        alert('Fill all NPM fields');
+        return;
+      }
+      
+      cdnUrl = `https://cdn.jsdelivr.net/npm/${pkg}${version}/${file}`;
+    } 
+    else if (type === 'github') {
+      const user = document.getElementById('githubUser').value;
+      const repo = document.getElementById('githubRepo').value;
+      const version = document.getElementById('githubVersion').value;
+      const file = document.getElementById('githubFile').value;
+      
+      if (!user || !repo || !version || !file) {
+        alert('Fill all GitHub fields');
+        return;
+      }
+      
+      cdnUrl = `https://cdn.jsdelivr.net/gh/${user}/${repo}${version}/${file}`;
+    } 
+    else if (type === 'wordpress') {
+      const plugin = document.getElementById('wpPlugin').value;
+      const version = document.getElementById('wpVersion').value;
+      const file = document.getElementById('wpFile').value;
+      
+      if (!plugin || !version || !file) {
+        alert('Fill all WordPress fields');
+        return;
+      }
+      
+      cdnUrl = `https://cdn.jsdelivr.net/wp/plugins/${plugin}${version}/${file}`;
+    }
+
+    document.getElementById('cdnOutput').textContent = cdnUrl;
+  }
+
+  // Converter tabs
+  function switchConverterTab(tabName) {
+    document.getElementById('html-to-cdn-tab').style.display = tabName === 'html-to-cdn' ? 'flex' : 'none';
+    document.getElementById('url-to-cdn-tab').style.display = tabName === 'url-to-cdn' ? 'flex' : 'none';
+    
+    document.querySelectorAll('.converter-tab-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  // Copy to clipboard
+  function copyOutput(elementId) {
+    const output = document.getElementById(elementId);
+    const text = output.textContent;
+    
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copied';
+      btn.style.background = '#10b981';
+      
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.style.background = '';
+      }, 2000);
+    });
+  }
+</script>
+
 </body>
 </html>
