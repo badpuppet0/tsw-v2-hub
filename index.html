@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TSW v2</title>
+  <title>TSW v2 - HTML Proxy & CDN Formatter</title>
 
   <!-- jsDelivr Hosted Libraries (Font Awesome Icons) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
@@ -19,6 +19,7 @@
       --accent-cyan: #35e8ff;
       --accent-blue: #5aa9ff;
       --accent-purple: #9b6cff;
+      --accent-green: #00ff88;
       --text-main: #f4f7ff;
       --text-muted: #8996b5;
     }
@@ -122,7 +123,7 @@
        ========================================================= */
     #site-content {
       display: none;
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 30px 20px;
     }
@@ -215,30 +216,10 @@
       color: #ffffff;
     }
 
-    /* Integrated HitWebCounter Styling */
-    .counter-wrapper {
-      display: inline-block;
-      margin-top: 15px;
-      padding: 16px 24px;
-      background: rgba(5, 8, 17, 0.6);
-      border: 1px solid var(--panel-border);
-      border-radius: 12px;
-      text-align: center;
-    }
-
-    .counter-title {
-      font-size: 11px;
-      letter-spacing: 1.5px;
-      color: var(--accent-cyan);
-      text-transform: uppercase;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
     /* Cards Grid */
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
     }
 
@@ -298,50 +279,106 @@
       box-shadow: 0 0 12px rgba(90, 169, 255, 0.4);
     }
 
-    /* Interactive Games Section */
-    .game-container {
+    /* Proxy Tool Styles */
+    .proxy-container {
       background: var(--panel-bg);
       border: 1px solid var(--panel-border);
       border-radius: 16px;
       padding: 24px;
       margin-top: 20px;
-      text-align: center;
     }
 
-    #game-canvas {
-      background: #000;
-      border: 2px solid var(--accent-blue);
-      border-radius: 8px;
-      margin: 15px auto;
-      display: block;
-      max-width: 100%;
+    .proxy-section {
+      margin-bottom: 24px;
     }
 
-    .tictactoe-board {
-      display: grid;
-      grid-template-columns: repeat(3, 80px);
+    .proxy-section h3 {
+      color: var(--accent-cyan);
+      font-size: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
       gap: 8px;
-      justify-content: center;
-      margin: 20px auto;
     }
 
-    .ttt-cell {
-      width: 80px;
-      height: 80px;
+    .input-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .input-group input {
+      flex: 1;
+      min-width: 250px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--panel-border);
+      color: var(--text-main);
+      padding: 12px 14px;
       border-radius: 8px;
-      font-size: 32px;
-      font-weight: bold;
-      color: var(--accent-cyan);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
     }
 
-    .ttt-cell:hover {
-      background: rgba(90, 169, 255, 0.15);
+    .input-group input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .input-group button {
+      background: var(--accent-blue);
+      border: none;
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .input-group button:hover {
+      background: var(--accent-cyan);
+      box-shadow: 0 0 12px rgba(90, 169, 255, 0.4);
+    }
+
+    .output-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(90, 169, 255, 0.3);
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 10px;
+      position: relative;
+      word-break: break-all;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--accent-green);
+      min-height: 40px;
+      max-height: 200px;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--accent-purple);
+      border: none;
+      color: #ffffff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-cyan);
+    }
+
+    .copy-btn.copied {
+      background: var(--accent-green);
     }
 
     /* Footer Bar */
@@ -402,6 +439,8 @@
       max-width: 420px;
       padding: 24px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      max-height: 80vh;
+      overflow-y: auto;
     }
 
     .modal-header {
@@ -443,6 +482,42 @@
     .credits-value {
       font-size: 14px;
       color: var(--text-main);
+    }
+
+    .help-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    .format-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .format-tab {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--panel-border);
+      color: var(--text-muted);
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .format-tab:hover {
+      background: rgba(90, 169, 255, 0.1);
+      border-color: var(--accent-blue);
+    }
+
+    .format-tab.active {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
     }
   </style>
 </head>
@@ -488,10 +563,8 @@
       <div class="brand-title" id="ui-brand-title">TSW v2</div>
       <nav class="nav-tabs">
         <button class="tab-btn active" onclick="switchTab('home')"><i class="fa-solid fa-house"></i> Home</button>
-        <button class="tab-btn" onclick="switchTab('unblockers')"><i class="fa-solid fa-unlock"></i> Unblockers</button>
-        <button class="tab-btn" onclick="switchTab('proxies')"><i class="fa-solid fa-network-wired"></i> Proxies</button>
-        <button class="tab-btn" onclick="switchTab('games')"><i class="fa-solid fa-gamepad"></i> Games</button>
-        <button class="tab-btn" onclick="switchTab('forms')"><i class="fa-solid fa-file-lines"></i> Forms</button>
+        <button class="tab-btn" onclick="switchTab('proxy')"><i class="fa-solid fa-globe"></i> HTML Proxy</button>
+        <button class="tab-btn" onclick="switchTab('cdn')"><i class="fa-solid fa-network-wired"></i> CDN Formatter</button>
       </nav>
     </header>
 
@@ -499,137 +572,147 @@
     <main id="tab-home" class="tab-content active">
       <div class="home-hero">
         <h1 class="home-slogan" id="ui-slogan">Unrestricted access to what matters.</h1>
-        
-        <!-- User HitWebCounter Integration -->
-        <div class="counter-wrapper">
-          <div class="counter-title">TOTAL SITE VISITS</div>
-          <!-- hitwebcounter Code START -->
-          <a href="https://www.hitwebcounter.com/character-counter" target="_blank" rel="noopener" title="Total Characters">
-            <img src="https://www.hitwebcounter.com/counter/counter.php?page=21520960&amp;style=0001&amp;nbdigits=5&amp;type=page" alt="Total Characters" decoding="async" style="border:0;max-width:100%;height:auto;" />
-          </a>
-          <br />
-          <a href="https://www.hitwebcounter.com/" target="_blank" rel="noopener" style="font-family:Arial, Helvetica, sans-serif;font-size:10px;color:#636066;text-decoration:underline;font-weight:strong;">PageHits</a>
-          <!-- hitwebcounter Code END -->
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 15px;">
+          Web utilities including HTML proxy capabilities and jsDelivr CDN formatter.
+        </p>
+      </div>
+
+      <div class="cards-grid" style="margin-top: 40px;">
+        <div class="card">
+          <div>
+            <div class="card-icon"><i class="fa-solid fa-globe"></i></div>
+            <h3>HTML Proxy</h3>
+            <p>Access and proxy HTML content from any URL.</p>
+          </div>
+          <button class="card-btn" onclick="switchTab('proxy')">Open Proxy →</button>
+        </div>
+        <div class="card">
+          <div>
+            <div class="card-icon"><i class="fa-solid fa-link"></i></div>
+            <h3>CDN Formatter</h3>
+            <p>Convert URLs to jsDelivr CDN format instantly.</p>
+          </div>
+          <button class="card-btn" onclick="switchTab('cdn')">Open Formatter →</button>
         </div>
       </div>
     </main>
 
-    <!-- Tab 2: UNBLOCKERS -->
-    <section id="tab-unblockers" class="tab-content">
-      <div class="cards-grid">
-        <div class="card">
-          <div>
-            <div class="card-icon"><i class="fa-solid fa-bolt"></i></div>
-            <h3>Unblocker Node 1</h3>
-            <p>Fast primary unblocker gateway.</p>
-          </div>
-          <a href="#" class="card-btn" target="_blank">Launch →</a>
-        </div>
-        <div class="card">
-          <div>
-            <div class="card-icon"><i class="fa-solid fa-rocket"></i></div>
-            <h3>Unblocker Node 2</h3>
-            <p>High-speed backup web portal.</p>
-          </div>
-          <a href="#" class="card-btn" target="_blank">Launch →</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Tab 3: PROXIES -->
-    <section id="tab-proxies" class="tab-content">
-      <div class="cards-grid">
-        <div class="card">
-          <div>
-            <div class="card-icon"><i class="fa-solid fa-globe"></i></div>
-            <h3>Proxy Alpha</h3>
-            <p>Encrypted web session proxy server.</p>
-          </div>
-          <a href="#" class="card-btn" target="_blank">Connect →</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Tab 4: GAMES -->
-    <section id="tab-games" class="tab-content">
-      <div class="cards-grid">
-        <div class="card">
-          <div>
-            <div class="card-icon"><i class="fa-solid fa-border-all"></i></div>
-            <h3>Tic Tac Toe</h3>
-            <p>Classic 2-player grid game.</p>
-          </div>
-          <button class="card-btn" onclick="startTicTacToe()">Play Now</button>
-        </div>
-        <div class="card">
-          <div>
-            <div class="card-icon"><i class="fa-solid fa-staff-snake"></i></div>
-            <h3>Snake</h3>
-            <p>Classic arcade snake game.</p>
-          </div>
-          <button class="card-btn" onclick="startSnake()">Play Now</button>
-        </div>
-      </div>
-
-      <!-- Playable Game Box -->
-      <div id="game-view" class="game-container" style="display:none;">
-        <h2 id="game-title" style="color:#fff; margin-bottom:10px;">Game</h2>
+    <!-- Tab 2: HTML PROXY -->
+    <section id="tab-proxy" class="tab-content">
+      <div class="proxy-container">
+        <h2 style="color: var(--accent-cyan); margin-bottom: 20px;">
+          <i class="fa-solid fa-globe"></i> HTML Proxy Tool
+        </h2>
         
-        <!-- Tic Tac Toe Game -->
-        <div id="ttt-game" style="display:none;">
-          <div class="tictactoe-board">
-            <div class="ttt-cell" onclick="makeTTTMove(this, 0)"></div>
-            <div class="ttt-cell" onclick="makeTTTMove(this, 1)"></div>
-            <div class="ttt-cell" onclick="makeTTTMove(this, 2)"></div>
-            <div class="ttt-cell" onclick="makeTTTMove(this, 3)"></div>
-            <div class="ttt-cell" onclick="makeTTTMove(this, 4)"></div>
-            <div class="ttt-cell" onclick="makeTTTMove(this, 5)"></div>
-            <div class="ttt-cell" onclick="makeTTTMove(this, 6)"></div>
-            <div class="ttt-cell" onclick="makeTTTMove(this, 7)"></div>
-            <div class="ttt-cell" onclick="makeTTTMove(this, 8)"></div>
+        <div class="proxy-section">
+          <h3><i class="fa-solid fa-code"></i> Fetch HTML Content</h3>
+          <div class="input-group">
+            <input type="text" id="proxy-url" placeholder="Enter URL (e.g., https://example.com)" />
+            <button onclick="fetchHTMLProxy()">Fetch HTML</button>
           </div>
-          <button class="card-btn" onclick="resetTTT()">Reset Match</button>
-        </div>
-
-        <!-- Snake Game -->
-        <div id="snake-game" style="display:none;">
-          <canvas id="game-canvas" width="300" height="300"></canvas>
-          <p style="font-size:12px; color:var(--text-muted);">Use Arrow Keys or WASD to turn</p>
+          <div class="help-text">
+            Enter any URL to retrieve and display its HTML content. Useful for viewing page structure and debugging.
+          </div>
+          <div id="proxy-output" class="output-box" style="display: none;">
+            <button class="copy-btn" onclick="copyToClipboard('proxy-output')">Copy</button>
+            <div id="proxy-output-content"></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Tab 5: FORMS -->
-    <section id="tab-forms" class="tab-content">
-      <div class="cards-grid">
-        <div class="card">
-          <div>
-            <div class="card-icon"><i class="fa-solid fa-lightbulb"></i></div>
-            <h3>Suggestions</h3>
-            <p>Submit feedback and feature requests directly.</p>
+    <!-- Tab 3: CDN FORMATTER -->
+    <section id="tab-cdn" class="tab-content">
+      <div class="proxy-container">
+        <h2 style="color: var(--accent-cyan); margin-bottom: 20px;">
+          <i class="fa-solid fa-network-wired"></i> jsDelivr CDN Formatter
+        </h2>
+        
+        <div class="proxy-section">
+          <h3><i class="fa-solid fa-project-diagram"></i> Convert to CDN URL</h3>
+          
+          <div class="format-tabs">
+            <button class="format-tab active" onclick="setFormatMode('npm')">NPM</button>
+            <button class="format-tab" onclick="setFormatMode('github')">GitHub</button>
+            <button class="format-tab" onclick="setFormatMode('wordpress')">WordPress</button>
+            <button class="format-tab" onclick="setFormatMode('custom')">Custom</button>
           </div>
-          <a id="btn-suggestion-form" href="#" class="card-btn" target="_blank">Open Form →</a>
+
+          <div id="npm-mode" class="format-mode">
+            <div class="input-group">
+              <input type="text" id="npm-package" placeholder="e.g., jquery" />
+              <input type="text" id="npm-version" placeholder="@3.6.0 or @latest" />
+              <input type="text" id="npm-file" placeholder="dist/jquery.min.js" />
+              <button onclick="formatNPM()">Format</button>
+            </div>
+            <div class="help-text">
+              Format: https://cdn.jsdelivr.net/npm/[package]@[version]/[file]
+            </div>
+          </div>
+
+          <div id="github-mode" class="format-mode" style="display: none;">
+            <div class="input-group">
+              <input type="text" id="github-user" placeholder="GitHub username" />
+              <input type="text" id="github-repo" placeholder="Repository name" />
+              <input type="text" id="github-version" placeholder="@latest or commit SHA" />
+              <button onclick="formatGitHub()">Format</button>
+            </div>
+            <div class="input-group">
+              <input type="text" id="github-file" placeholder="Path to file (e.g., dist/file.js)" style="flex: 1;" />
+            </div>
+            <div class="help-text">
+              Format: https://cdn.jsdelivr.net/gh/[user]/[repo]@[version]/[file]
+            </div>
+          </div>
+
+          <div id="wordpress-mode" class="format-mode" style="display: none;">
+            <div class="input-group">
+              <input type="text" id="wp-plugin" placeholder="Plugin slug" />
+              <input type="text" id="wp-version" placeholder="@latest or version" />
+              <input type="text" id="wp-file" placeholder="js/file.js" />
+              <button onclick="formatWordPress()">Format</button>
+            </div>
+            <div class="help-text">
+              Format: https://cdn.jsdelivr.net/wp/plugins/[plugin]@[version]/[file]
+            </div>
+          </div>
+
+          <div id="custom-mode" class="format-mode" style="display: none;">
+            <div class="input-group">
+              <input type="text" id="custom-url" placeholder="https://example.com/path/to/file.js" />
+              <button onclick="validateCDNFormat()">Validate & Format</button>
+            </div>
+            <div class="help-text">
+              Paste any URL and we'll suggest the best CDN format for it.
+            </div>
+          </div>
+
+          <div id="cdn-output" class="output-box" style="display: none; margin-top: 16px;">
+            <button class="copy-btn" onclick="copyToClipboard('cdn-output-content')">Copy</button>
+            <div id="cdn-output-content"></div>
+          </div>
         </div>
 
-        <div class="card">
-          <div>
-            <div class="card-icon"><i class="fa-solid fa-user-plus"></i></div>
-            <h3>Apply to Help</h3>
-            <p>Apply to join our development and support team.</p>
+        <div class="proxy-section" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--panel-border);">
+          <h3><i class="fa-solid fa-list"></i> Quick Reference</h3>
+          <div class="help-text" style="margin-top: 0;">
+            <strong>jsDelivr CDN Formats:</strong><br><br>
+            <strong>NPM Packages:</strong> cdn.jsdelivr.net/npm/package@version/file<br>
+            <strong>GitHub Repos:</strong> cdn.jsdelivr.net/gh/user/repo@version/file<br>
+            <strong>WordPress Plugins:</strong> cdn.jsdelivr.net/wp/plugins/slug@version/file<br>
+            <strong>General Combine:</strong> cdn.jsdelivr.net/combine/url1,url2,url3<br><br>
+            jsDelivr supports performance optimization like minification, version optimization, and more!
           </div>
-          <a id="btn-apply-form" href="#" class="card-btn" target="_blank">Open Form →</a>
         </div>
       </div>
     </section>
 
     <!-- Footer Bar -->
     <footer class="footer-bar">
-      <div style="font-size:12px; color:var(--text-muted);">TSW v2 NETWORK</div>
+      <div style="font-size:12px; color:var(--text-muted);">TSW v2 - HTML Proxy & CDN Formatter</div>
       <div class="footer-links">
-        <button class="footer-btn" onclick="openModal('copyright-modal')">Copyright Info</button>
-        <button class="footer-btn" onclick="openModal('credits-modal')">Credits</button>
-        <a id="btn-discord" href="#" class="footer-btn" target="_blank">Discord</a>
-        <button class="footer-btn" onclick="switchTab('forms')">Google Forms</button>
+        <a href="https://www.jsdelivr.com/" class="footer-btn" target="_blank"><i class="fa-solid fa-external-link"></i> jsDelivr Docs</a>
+        <button class="footer-btn" onclick="openModal('info-modal')"><i class="fa-solid fa-circle-info"></i> Info</button>
       </div>
     </footer>
 
@@ -638,40 +721,30 @@
   <!-- =========================================================
        3. MODALS
        ========================================================= -->
-  <div id="credits-modal" class="modal-overlay">
+  <div id="info-modal" class="modal-overlay">
     <div class="modal-box">
       <div class="modal-header">
-        <div class="modal-title">PROJECT CREDITS</div>
-        <button class="close-btn" onclick="closeModal('credits-modal')">✕</button>
+        <div class="modal-title">ABOUT THIS TOOL</div>
+        <button class="close-btn" onclick="closeModal('info-modal')">✕</button>
       </div>
       <div class="credits-group">
-        <div class="credits-label">CREATOR</div>
-        <div class="credits-value" id="credit-creator">User</div>
+        <div class="credits-label">PURPOSE</div>
+        <div class="credits-value">HTML Proxy and jsDelivr CDN URL formatter for web developers and content creators.</div>
       </div>
-      <div class="credits-group">
-        <div class="credits-label">DEVELOPERS</div>
-        <div class="credits-value" id="credit-devs">Developer 1</div>
+      <div class="credits-group" style="margin-top: 16px;">
+        <div class="credits-label">FEATURES</div>
+        <div class="credits-value">
+          • Fetch and display HTML content<br>
+          • Format URLs for jsDelivr CDN<br>
+          • Support for NPM, GitHub, WordPress plugins<br>
+          • One-click copy functionality<br>
+          • Easy-to-use interface
+        </div>
       </div>
-      <div class="credits-group">
-        <div class="credits-label">MODERATORS</div>
-        <div class="credits-value" id="credit-mods">Mod 1</div>
+      <div class="credits-group" style="margin-top: 16px;">
+        <div class="credits-label">jsDelivr</div>
+        <div class="credits-value">A free, fast, and reliable CDN for open-source projects. Learn more at <a href="https://www.jsdelivr.com" target="_blank" style="color: var(--accent-blue);">jsdelivr.com</a></div>
       </div>
-      <div class="credits-group">
-        <div class="credits-label">OG TSW</div>
-        <div class="credits-value" id="credit-og">Original Team</div>
-      </div>
-    </div>
-  </div>
-
-  <div id="copyright-modal" class="modal-overlay">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-title">COPYRIGHT INFO</div>
-        <button class="close-btn" onclick="closeModal('copyright-modal')">✕</button>
-      </div>
-      <p style="font-size:13px; color:var(--text-muted); line-height:1.6;">
-        TSW v2 is an open utility landing hub. All game assets, tools, and external services belong to their respective creators.
-      </p>
     </div>
   </div>
 
@@ -683,20 +756,7 @@
     const CONFIG = {
       PASSCODE: "1234",
       TITLE: "TSW v2",
-      SLOGAN: "Unrestricted access to what matters.",
-
-      CREDITS: {
-        CREATOR: "Your Name",
-        DEVS: "Dev Team",
-        MODS: "Mod Team",
-        OG_TSW: "OG Team"
-      },
-
-      LINKS: {
-        SUGGESTIONS_FORM: "https://docs.google.com/forms/d/e/1FAIpQLSe5p2Jgejz3QZIzWdsobi2I4IGmm-XY8g7VCvdheXOjb1O1hQ/viewform?usp=publish-editor",
-        APPLY_HELP_FORM: "https://docs.google.com/forms/d/e/1FAIpQLSfIhbY_ymP-swukh8WRobou1O946i_xTMLL-xcMSL3-9S6q_Q/viewform?usp=publish-editor",
-        DISCORD: "#"
-      }
+      SLOGAN: "Unrestricted access to what matters."
     };
 
     /* CALCULATOR PASSCODE LOCK LOGIC */
@@ -748,91 +808,139 @@
     function openModal(id) { document.getElementById(id).style.display = "flex"; }
     function closeModal(id) { document.getElementById(id).style.display = "none"; }
 
-    /* TIC TAC TOE GAME LOGIC */
-    let tttTurn = 'X';
-    let tttState = Array(9).fill('');
+    /* HTML PROXY LOGIC */
+    function fetchHTMLProxy() {
+      const url = document.getElementById('proxy-url').value.trim();
+      if (!url) {
+        alert('Please enter a URL');
+        return;
+      }
 
-    function startTicTacToe() {
-      document.getElementById('game-view').style.display = 'block';
-      document.getElementById('ttt-game').style.display = 'block';
-      document.getElementById('snake-game').style.display = 'none';
-      document.getElementById('game-title').innerText = 'Tic Tac Toe';
-      resetTTT();
+      const outputDiv = document.getElementById('proxy-output');
+      const contentDiv = document.getElementById('proxy-output-content');
+      
+      contentDiv.innerHTML = '<span style="color: var(--accent-blue);">Fetching...</span>';
+      outputDiv.style.display = 'block';
+
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {
+          const escaped = html
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .substring(0, 3000);
+          contentDiv.innerHTML = escaped + (html.length > 3000 ? '<br><br><em style="color: var(--text-muted);">[Content truncated - showing first 3000 characters]</em>' : '');
+        })
+        .catch(error => {
+          contentDiv.innerHTML = '<span style="color: #ff6b6b;">Error: ' + error.message + '</span><br><em style="color: var(--text-muted); margin-top: 10px; display: block;">Note: CORS restrictions may apply. Consider using a proxy service.</em>';
+        });
     }
 
-    function makeTTTMove(cell, idx) {
-      if (tttState[idx] !== '') return;
-      tttState[idx] = tttTurn;
-      cell.innerText = tttTurn;
-      tttTurn = tttTurn === 'X' ? 'O' : 'X';
+    /* CDN FORMATTER LOGIC */
+    let currentFormatMode = 'npm';
+
+    function setFormatMode(mode) {
+      currentFormatMode = mode;
+      document.querySelectorAll('.format-mode').forEach(el => el.style.display = 'none');
+      document.getElementById(mode + '-mode').style.display = 'block';
+      document.querySelectorAll('.format-tab').forEach(el => el.classList.remove('active'));
+      event.target.classList.add('active');
     }
 
-    function resetTTT() {
-      tttTurn = 'X';
-      tttState = Array(9).fill('');
-      document.querySelectorAll('.ttt-cell').forEach(c => c.innerText = '');
+    function formatNPM() {
+      const pkg = document.getElementById('npm-package').value.trim();
+      const version = document.getElementById('npm-version').value.trim();
+      const file = document.getElementById('npm-file').value.trim();
+
+      if (!pkg || !version || !file) {
+        alert('Please fill all fields');
+        return;
+      }
+
+      const cdnUrl = `https://cdn.jsdelivr.net/npm/${pkg}${version}/${file}`;
+      displayCDNOutput(cdnUrl);
     }
 
-    /* SNAKE GAME LOGIC */
-    let snakeInterval = null;
-    function startSnake() {
-      document.getElementById('game-view').style.display = 'block';
-      document.getElementById('snake-game').style.display = 'block';
-      document.getElementById('ttt-game').style.display = 'none';
-      document.getElementById('game-title').innerText = 'Snake';
+    function formatGitHub() {
+      const user = document.getElementById('github-user').value.trim();
+      const repo = document.getElementById('github-repo').value.trim();
+      const version = document.getElementById('github-version').value.trim();
+      const file = document.getElementById('github-file').value.trim();
 
-      const canvas = document.getElementById('game-canvas');
-      const ctx = canvas.getContext('2d');
-      let snake = [{x: 10, y: 10}];
-      let food = {x: 5, y: 5};
-      let dx = 1, dy = 0;
+      if (!user || !repo || !version || !file) {
+        alert('Please fill all fields');
+        return;
+      }
 
-      if (snakeInterval) clearInterval(snakeInterval);
+      const cdnUrl = `https://cdn.jsdelivr.net/gh/${user}/${repo}${version}/${file}`;
+      displayCDNOutput(cdnUrl);
+    }
 
-      document.onkeydown = function(e) {
-        if (e.key === 'ArrowUp' || e.key === 'w') { if (dy === 0) { dx = 0; dy = -1; } }
-        else if (e.key === 'ArrowDown' || e.key === 's') { if (dy === 0) { dx = 0; dy = 1; } }
-        else if (e.key === 'ArrowLeft' || e.key === 'a') { if (dx === 0) { dx = -1; dy = 0; } }
-        else if (e.key === 'ArrowRight' || e.key === 'd') { if (dx === 0) { dx = 1; dy = 0; } }
-      };
+    function formatWordPress() {
+      const plugin = document.getElementById('wp-plugin').value.trim();
+      const version = document.getElementById('wp-version').value.trim();
+      const file = document.getElementById('wp-file').value.trim();
 
-      snakeInterval = setInterval(function() {
-        let head = {x: snake[0].x + dx, y: snake[0].y + dy};
-        if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20) {
-          head = {x: (head.x + 20) % 20, y: (head.y + 20) % 20};
+      if (!plugin || !version || !file) {
+        alert('Please fill all fields');
+        return;
+      }
+
+      const cdnUrl = `https://cdn.jsdelivr.net/wp/plugins/${plugin}${version}/${file}`;
+      displayCDNOutput(cdnUrl);
+    }
+
+    function validateCDNFormat() {
+      const url = document.getElementById('custom-url').value.trim();
+      if (!url) {
+        alert('Please enter a URL');
+        return;
+      }
+
+      // Try to detect URL type and suggest format
+      let suggestion = url;
+      if (url.includes('github.com')) {
+        const match = url.match(/github\.com\/([^\/]+)\/([^\/]+).*?\/([^?]+)/);
+        if (match) {
+          suggestion = `https://cdn.jsdelivr.net/gh/${match[1]}/${match[2]}@latest/${match[3]}`;
         }
-        snake.unshift(head);
+      } else if (url.includes('npmjs.com') || url.includes('npm')) {
+        suggestion = `https://cdn.jsdelivr.net/npm/${url.split('/').pop()}@latest`;
+      }
 
-        if (head.x === food.x && head.y === food.y) {
-          food = {Math: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20)};
-        } else {
-          snake.pop();
-        }
+      displayCDNOutput(suggestion);
+    }
 
-        ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, 300, 300);
+    function displayCDNOutput(cdnUrl) {
+      const outputDiv = document.getElementById('cdn-output');
+      const contentDiv = document.getElementById('cdn-output-content');
+      
+      contentDiv.textContent = cdnUrl;
+      outputDiv.style.display = 'block';
+    }
 
-        ctx.fillStyle = '#35e8ff';
-        snake.forEach(s => ctx.fillRect(s.x * 15, s.y * 15, 13, 13));
-
-        ctx.fillStyle = '#ff5ccf';
-        ctx.fillRect(food.x * 15, food.y * 15, 13, 13);
-      }, 100);
+    function copyToClipboard(elementId) {
+      const element = document.getElementById(elementId);
+      const text = element.textContent;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = event.target;
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
     }
 
     /* INITIALIZE CONFIG ON LOAD */
     window.onload = function() {
       document.getElementById("ui-brand-title").innerText = CONFIG.TITLE;
       document.getElementById("ui-slogan").innerText = CONFIG.SLOGAN;
-
-      document.getElementById("credit-creator").innerText = CONFIG.CREDITS.CREATOR;
-      document.getElementById("credit-devs").innerText = CONFIG.CREDITS.DEVS;
-      document.getElementById("credit-mods").innerText = CONFIG.CREDITS.MODS;
-      document.getElementById("credit-og").innerText = CONFIG.CREDITS.OG_TSW;
-
-      document.getElementById("btn-suggestion-form").href = CONFIG.LINKS.SUGGESTIONS_FORM;
-      document.getElementById("btn-apply-form").href = CONFIG.LINKS.APPLY_HELP_FORM;
-      document.getElementById("btn-discord").href = CONFIG.LINKS.DISCORD;
     };
   </script>
 </body>
